@@ -74,8 +74,9 @@ Key components:
 
 Final safe savings formula:
 
-"" Safe Target = min(EMA Estimate, Income Today − Survival Minimum)"" 
-
+''' bash
+Safe Target = min(EMA Estimate, Income Today − Survival Minimum)
+'''
 
 This ensures savings recommendations are **stable and safe**.
 
