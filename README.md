@@ -125,7 +125,7 @@ pms
 
 ## Running the Project
 
-This project runs on a local development environment, deployment ready for cloud.
+The UI is deployed on Vercel. The backend is running locally for development.
 
 ### Backend
 
