@@ -74,9 +74,9 @@ Key components:
 
 Final safe savings formula:
 
-''' bash
+```bash
 Safe Target = min(EMA Estimate, Income Today − Survival Minimum)
-'''
+```
 
 This ensures savings recommendations are **stable and safe**.
 
@@ -128,25 +128,26 @@ pms
 
 ### Backend
 
+```
 pip install -r requirements.txt
 uvicorn app:app --reload
-
+```
 Backend runs on:
-
+```
 http://localhost:8000
-
+```
 ---
 
 ### Frontend
-
+```
 cd frontend
 npm install
 npm run dev
-
+```
 Frontend runs on:
-
+```
 http://localhost:5173
-
+```
 
 ---
 
