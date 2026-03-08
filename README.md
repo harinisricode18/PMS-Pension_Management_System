@@ -103,7 +103,7 @@ Other Components
 ---
 
 ## Project Structure
-
+```
 pms
 │
 ├── frontend/ # React + Vite frontend
@@ -120,8 +120,7 @@ pms
 │
 ├── requirements.txt
 └── .env.example
-
-
+```
 ---
 
 ## Running the Project
