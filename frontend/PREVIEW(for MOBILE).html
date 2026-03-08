@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PMS v2 — Redesign Preview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Nunito:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: #0f172a;
+    display: flex;
+    gap: 20px;
+    padding: 32px;
+    overflow-x: auto;
+    min-height: 100vh;
+    align-items: flex-start;
+    justify-content: center;
+  }
+
+  .screen {
+    width: 375px;
+    min-width: 375px;
+    background: #f8fafc;
+    border-radius: 40px;
+    overflow: hidden;
+    box-shadow: 0 32px 80px -16px rgba(0,0,0,0.5);
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .screen-label {
+    color: rgba(255,255,255,0.4);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-align: center;
+    margin-bottom: 12px;
+  }
+
+  /* ── Header ── */
+  .app-header {
+    background: white;
+    border-bottom: 1px solid #f1f5f9;
+    padding: 0 20px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky; top: 0; z-index: 10;
+  }
+  .header-greeting small { font-size: 10px; color: #94a3b8; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; display: block; }
+  .header-greeting strong { font-family: 'Sora', sans-serif; font-size: 17px; color: #1e293b; }
+  .header-actions { display: flex; gap: 8px; }
+  .icon-btn {
+    width: 40px; height: 40px;
+    border-radius: 14px;
+    border: 1px solid #f1f5f9;
+    background: #f8fafc;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  .icon-btn.indigo { background: #eef2ff; border-color: #e0e7ff; }
+
+  /* ── Page content ── */
+  .page-content { padding: 16px; display: flex; flex-direction: column; gap: 14px; padding-bottom: 100px; }
+
+  /* ── Vault Card ── */
+  .vault-card {
+    border-radius: 24px;
+    background: linear-gradient(135deg, #312e81 0%, #4338ca 45%, #6366f1 100%);
+    padding: 24px;
+    color: white;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 16px 48px -8px rgba(79,70,229,0.45), 0 4px 16px -4px rgba(0,0,0,0.12);
+  }
+  .vault-card::before {
+    content: '';
+    position: absolute; right: -30px; top: -30px;
+    width: 140px; height: 140px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+  .vault-card::after {
+    content: '';
+    position: absolute; right: 0; top: -10px;
+    width: 80px; height: 80px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+  .vault-label { font-size: 10px; color: #a5b4fc; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 6px; }
+  .vault-amount { font-family: 'Sora', sans-serif; font-size: 46px; font-weight: 800; color: white; margin-bottom: 20px; line-height: 1.1; }
+  .split-bar { width: 100%; height: 7px; border-radius: 99px; background: rgba(255,255,255,0.2); margin-bottom: 16px; overflow: hidden; }
+  .split-bar-fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg, #fbbf24, #f59e0b); width: 80%; transition: width 1s; }
+  .vault-cells { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .vault-cell {
+    background: rgba(255,255,255,0.1);
+    border-radius: 18px;
+    padding: 13px;
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+  .vault-cell-header { display: flex; align-items: center; gap: 6px; margin-bottom: 8px; }
+  .vault-cell-dot { width: 8px; height: 8px; border-radius: 50%; }
+  .vault-cell-label { font-size: 10px; font-weight: 700; }
+  .vault-cell-amount { font-family: 'Sora', sans-serif; font-size: 16px; font-weight: 700; color: white; }
+  .vault-cell-sub { font-size: 9px; color: rgba(255,255,255,0.35); margin-top: 2px; font-weight: 600; }
+
+  /* ── Nudge Card ── */
+  .nudge-card {
+    border-radius: 20px;
+    border: 1px solid #a5b4fc;
+    background: #eef2ff;
+    padding: 14px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .nudge-icon {
+    width: 44px; height: 44px;
+    border-radius: 14px;
+    background: rgba(255,255,255,0.55);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; flex-shrink: 0;
+  }
+  .nudge-state { font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; color: #4f46e5; margin-bottom: 2px; }
+  .nudge-msg { font-size: 13px; font-weight: 600; color: #4338ca; }
+  .nudge-pill {
+    margin-left: auto; flex-shrink: 0;
+    background: rgba(255,255,255,0.6);
+    border-radius: 99px;
+    padding: 4px 10px;
+    font-size: 11px; font-weight: 800; color: #4f46e5;
+  }
+
+  /* ── Quick Actions ── */
+  .actions-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .action-btn {
+    border-radius: 22px;
+    padding: 16px 8px;
+    text-align: center;
+    color: white;
+    cursor: pointer;
+    border: none;
+  }
+  .action-btn .action-icon { font-size: 26px; margin-bottom: 6px; }
+  .action-btn .action-label { font-size: 13px; font-weight: 800; display: block; }
+  .action-btn .action-sub { font-size: 10px; color: rgba(255,255,255,0.65); font-weight: 600; }
+  .action-save { background: linear-gradient(135deg, #4f46e5, #818cf8); box-shadow: 0 8px 20px -4px rgba(79,70,229,0.45); }
+  .action-income { background: linear-gradient(135deg, #059669, #34d399); box-shadow: 0 8px 20px -4px rgba(5,150,105,0.4); }
+  .action-withdraw { background: linear-gradient(135deg, #d97706, #fbbf24); box-shadow: 0 8px 20px -4px rgba(217,119,6,0.4); }
+
+  /* ── Health Score ── */
+  .health-card {
+    background: white;
+    border-radius: 22px;
+    border: 1px solid #f1f5f9;
+    padding: 16px;
+    display: flex; align-items: center; gap: 14px;
+    box-shadow: 0 2px 12px -2px rgba(79,70,229,0.08);
+  }
+  .health-ring-wrap {
+    width: 64px; height: 64px;
+    border-radius: 16px;
+    background: #ecfdf5;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .health-label-sm { font-size: 10px; color: #94a3b8; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; }
+  .health-score-label { font-family: 'Sora', sans-serif; font-size: 20px; font-weight: 800; color: #10b981; margin: 2px 0; }
+  .health-ins { font-size: 11px; color: #059669; font-weight: 700; }
+  .health-arrow { color: #cbd5e1; margin-left: auto; font-size: 18px; }
+
+  /* ── Transactions ── */
+  .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+  .section-title { font-size: 15px; font-weight: 800; color: #1e293b; }
+  .section-link { font-size: 11px; font-weight: 800; color: #4f46e5; }
+  .txn-row {
+    background: white;
+    border-radius: 18px;
+    border: 1px solid #f1f5f9;
+    padding: 12px 16px;
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 8px;
+    box-shadow: 0 1px 4px -1px rgba(0,0,0,0.04);
+  }
+  .txn-icon { width: 38px; height: 38px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+  .txn-info { flex: 1; }
+  .txn-name { font-size: 13px; font-weight: 700; color: #334155; }
+  .txn-time { font-size: 11px; color: #94a3b8; margin-top: 2px; }
+  .txn-amt { font-family: 'Sora', sans-serif; font-size: 13px; font-weight: 800; }
+  .txn-amt.pos { color: #10b981; }
+  .txn-amt.neg { color: #ef4444; }
+
+  /* ── Bottom Nav ── */
+  .bottom-nav {
+    position: sticky; bottom: 0;
+    background: rgba(255,255,255,0.96);
+    backdrop-filter: blur(12px);
+    border-top: 1px solid #f1f5f9;
+    display: flex;
+    box-shadow: 0 -4px 24px -4px rgba(0,0,0,0.06);
+    padding-bottom: 8px;
+  }
+  .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 10px 6px 6px; gap: 3px; border-radius: 16px; cursor: pointer; position: relative; }
+  .nav-item.active { background: #eef2ff; }
+  .nav-item .nav-dot { width: 3px; height: 3px; background: #4f46e5; border-radius: 50%; }
+  .nav-label { font-size: 9px; font-weight: 800; letter-spacing: 0.04em; }
+  .nav-label.active { color: #4f46e5; }
+  .nav-label.inactive { color: #94a3b8; }
+
+  /* ── Login Screen ── */
+  .login-hero {
+    background: linear-gradient(160deg, #312e81 0%, #4338ca 45%, #818cf8 100%);
+    padding: 64px 24px 32px;
+    text-align: center;
+  }
+  .brand-icon {
+    width: 72px; height: 72px;
+    border-radius: 22px;
+    background: rgba(255,255,255,0.2);
+    border: 1px solid rgba(255,255,255,0.3);
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 16px;
+    font-size: 32px;
+    box-shadow: 0 8px 24px -4px rgba(0,0,0,0.2);
+  }
+  .brand-name { font-family: 'Sora', sans-serif; font-size: 36px; font-weight: 800; color: white; }
+  .brand-sub { font-size: 13px; color: #a5b4fc; font-weight: 600; margin-top: 4px; }
+  .login-card {
+    background: white;
+    border-radius: 32px 32px 0 0;
+    padding: 32px 24px 40px;
+    box-shadow: 0 -8px 40px rgba(0,0,0,0.15);
+  }
+  .login-title { font-family: 'Sora', sans-serif; font-size: 24px; font-weight: 800; color: #1e293b; }
+  .login-sub { font-size: 13px; color: #94a3b8; margin-top: 4px; margin-bottom: 24px; font-weight: 500; }
+  .field-label { font-size: 13px; font-weight: 700; color: #475569; margin-bottom: 6px; display: block; }
+  .field-input {
+    width: 100%; border: 1.5px solid #e2e8f0;
+    border-radius: 16px; background: #f8fafc;
+    padding: 14px 16px; font-size: 14px; font-weight: 600; color: #1e293b;
+    margin-bottom: 14px; font-family: 'Nunito', sans-serif;
+    outline: none;
+  }
+  .primary-btn {
+    width: 100%;
+    background: linear-gradient(135deg, #4f46e5, #6366f1);
+    color: white; font-size: 15px; font-weight: 800;
+    padding: 16px; border-radius: 18px; border: none;
+    box-shadow: 0 8px 20px -4px rgba(79,70,229,0.5);
+    cursor: pointer; font-family: 'Nunito', sans-serif;
+    margin-top: 4px;
+  }
+  .login-link { text-align: center; font-size: 13px; color: #94a3b8; margin-top: 20px; }
+  .login-link a { color: #4f46e5; font-weight: 800; }
+
+  /* ── Deposit Screen ── */
+  .tab-bar { display: flex; background: #f1f5f9; border-radius: 18px; padding: 4px; gap: 4px; }
+  .tab-btn { flex: 1; padding: 11px; border-radius: 14px; font-size: 13px; font-weight: 800; text-align: center; cursor: pointer; border: none; background: transparent; font-family: 'Nunito', sans-serif; }
+  .tab-btn.active { background: white; color: #4338ca; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+  .tab-btn.inactive { color: #94a3b8; }
+  .amount-input-wrap { position: relative; margin-bottom: 12px; }
+  .amount-prefix { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); font-size: 24px; font-weight: 800; color: #94a3b8; }
+  .amount-input {
+    width: 100%; border: 1.5px solid #e2e8f0;
+    border-radius: 18px; background: #f8fafc;
+    padding: 16px 16px 16px 42px; font-size: 32px; font-weight: 800;
+    color: #1e293b; font-family: 'Sora', sans-serif;
+    outline: none;
+  }
+  .quick-amounts { display: flex; gap: 8px; flex-wrap: wrap; }
+  .quick-pill { padding: 8px 14px; border-radius: 12px; font-size: 13px; font-weight: 800; border: 1.5px solid #e2e8f0; background: white; color: #475569; cursor: pointer; font-family: 'Nunito', sans-serif; }
+  .quick-pill.active { background: #4f46e5; color: white; border-color: #4f46e5; }
+  .split-preview { border-radius: 20px; overflow: hidden; border: 1px solid #f1f5f9; margin-top: 4px; }
+  .split-bar2 { height: 8px; background: #10b981; position: relative; }
+  .split-bar2-fill { position: absolute; left: 0; top: 0; height: 100%; background: #fbbf24; width: 80%; }
+  .split-cells { display: grid; grid-template-columns: 1fr 1fr; background: white; }
+  .split-cell { padding: 14px; }
+  .split-cell:first-child { border-right: 1px solid #f1f5f9; }
+  .split-cell-label { font-size: 10px; font-weight: 800; margin-bottom: 4px; display: flex; align-items: center; gap: 5px; }
+  .split-cell-dot2 { width: 7px; height: 7px; border-radius: 50%; }
+  .split-cell-amt { font-family: 'Sora', sans-serif; font-size: 18px; font-weight: 800; }
+  .split-cell-sub { font-size: 10px; color: #94a3b8; margin-top: 2px; }
+
+  /* ── Info pill ── */
+  .info-pill {
+    background: #eef2ff; border: 1px solid #e0e7ff;
+    border-radius: 16px; padding: 12px 14px;
+    display: flex; align-items: center; gap: 10px;
+    font-size: 12px; color: #4f46e5; font-weight: 600;
+  }
+  .info-icon { width: 30px; height: 30px; background: #e0e7ff; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
+</style>
+</head>
+<body>
+
+<!-- SCREEN 1: Dashboard -->
+<div>
+  <p class="screen-label">Dashboard</p>
+  <div class="screen">
+    <div class="app-header">
+      <div class="header-greeting">
+        <small>Welcome back</small>
+        <strong>Ramu 👋</strong>
+      </div>
+      <div class="header-actions">
+        <div class="icon-btn">🔔</div>
+        <div class="icon-btn indigo">🛡️</div>
+      </div>
+    </div>
+
+    <div class="page-content">
+      <!-- Vault Card -->
+      <div class="vault-card">
+        <div class="vault-label">Total Savings</div>
+        <div class="vault-amount">₹12,450</div>
+        <div class="split-bar"><div class="split-bar-fill"></div></div>
+        <div class="vault-cells">
+          <div class="vault-cell">
+            <div class="vault-cell-header">
+              <div class="vault-cell-dot" style="background:#fbbf24"></div>
+              <span class="vault-cell-label" style="color:#fde68a">Pension</span>
+            </div>
+            <div class="vault-cell-amount">₹9,960</div>
+            <div class="vault-cell-sub">80% · Locked to 60</div>
+          </div>
+          <div class="vault-cell">
+            <div class="vault-cell-header">
+              <div class="vault-cell-dot" style="background:#34d399"></div>
+              <span class="vault-cell-label" style="color:#6ee7b7">Liquid</span>
+            </div>
+            <div class="vault-cell-amount">₹2,490</div>
+            <div class="vault-cell-sub">20% · Emergency use</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Guardian Nudge -->
+      <div class="nudge-card">
+        <div class="nudge-icon">☀️</div>
+        <div>
+          <div class="nudge-state">Active Work Day</div>
+          <div class="nudge-msg">Great start! Hit your target today.</div>
+        </div>
+        <div class="nudge-pill">Save ₹180/day</div>
+      </div>
+
+      <!-- Quick Actions -->
+      <div>
+        <div class="section-header">
+          <div class="section-title">Quick Actions</div>
+        </div>
+        <div class="actions-grid">
+          <div class="action-btn action-save">
+            <div class="action-icon">💰</div>
+            <span class="action-label">Save</span>
+            <span class="action-sub">Deposit</span>
+          </div>
+          <div class="action-btn action-income">
+            <div class="action-icon">📈</div>
+            <span class="action-label">Income</span>
+            <span class="action-sub">Record</span>
+          </div>
+          <div class="action-btn action-withdraw">
+            <div class="action-icon">💸</div>
+            <span class="action-label">Withdraw</span>
+            <span class="action-sub">Emergency</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Health Score -->
+      <div class="health-card">
+        <div class="health-ring-wrap">
+          <svg width="52" height="52" viewBox="0 0 52 52">
+            <circle cx="26" cy="26" r="20" fill="none" stroke="#e2e8f0" stroke-width="5"/>
+            <circle cx="26" cy="26" r="20" fill="none" stroke="#10b981" stroke-width="5"
+              stroke-linecap="round"
+              stroke-dasharray="125.7"
+              stroke-dashoffset="37.7"
+              style="transform:rotate(-90deg);transform-origin:50% 50%"/>
+            <text x="26" y="23" text-anchor="middle" fill="#10b981" style="font-size:11px;font-family:Sora;font-weight:700">700</text>
+            <text x="26" y="33" text-anchor="middle" fill="#94a3b8" style="font-size:7px;font-family:Nunito">/1000</text>
+          </svg>
+        </div>
+        <div>
+          <div class="health-label-sm">Health Score</div>
+          <div class="health-score-label">Excellent</div>
+          <div class="health-ins">🛡️ Insurance Active</div>
+        </div>
+        <div class="health-arrow">›</div>
+      </div>
+
+      <!-- Transactions -->
+      <div>
+        <div class="section-header">
+          <div class="section-title">Recent Activity</div>
+          <div class="section-link">View all →</div>
+        </div>
+        <div class="txn-row">
+          <div class="txn-icon" style="background:#ecfdf5">💰</div>
+          <div class="txn-info">
+            <div class="txn-name">Direct Deposit</div>
+            <div class="txn-time">2 hours ago</div>
+          </div>
+          <div class="txn-amt pos">+₹200</div>
+        </div>
+        <div class="txn-row">
+          <div class="txn-icon" style="background:#fffbeb">📈</div>
+          <div class="txn-info">
+            <div class="txn-name">Income Recorded</div>
+            <div class="txn-time">Yesterday</div>
+          </div>
+          <div class="txn-amt pos">₹450</div>
+        </div>
+        <div class="txn-row">
+          <div class="txn-icon" style="background:#fef2f2">💸</div>
+          <div class="txn-info">
+            <div class="txn-name">Emergency Withdrawal</div>
+            <div class="txn-time">3 days ago</div>
+          </div>
+          <div class="txn-amt neg">−₹150</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bottom-nav">
+      <div class="nav-item active">
+        <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#4f46e5" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H5a1 1 0 01-1-1V9.5z"/><path stroke-linecap="round" stroke-linejoin="round" d="M9 21V12h6v9"/></svg>
+        <span class="nav-label active">Home</span>
+        <div class="nav-dot"></div>
+      </div>
+      <div class="nav-item">
+        <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#94a3b8" stroke-width="2"><circle cx="12" cy="12" r="9"/><path stroke-linecap="round" d="M12 7v5l3 3"/></svg>
+        <span class="nav-label inactive">Save</span>
+      </div>
+      <div class="nav-item">
+        <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#94a3b8" stroke-width="2"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+        <span class="nav-label inactive">Income</span>
+      </div>
+      <div class="nav-item">
+        <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#94a3b8" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg>
+        <span class="nav-label inactive">History</span>
+      </div>
+      <div class="nav-item">
+        <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#94a3b8" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+        <span class="nav-label inactive">Profile</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SCREEN 2: Login -->
+<div>
+  <p class="screen-label">Login</p>
+  <div class="screen" style="background: linear-gradient(160deg, #312e81 0%, #4338ca 45%, #818cf8 100%)">
+    <div class="login-hero">
+      <div class="brand-icon">🛡️</div>
+      <div class="brand-name">PMS</div>
+      <div class="brand-sub">Pension Management System</div>
+    </div>
+    <div class="login-card">
+      <div class="login-title">Welcome back</div>
+      <div class="login-sub">Sign in to your pension account</div>
+      <label class="field-label">Full Name</label>
+      <input class="field-input" placeholder="e.g. Ramu Kumar" value="Ramu Kumar">
+      <label class="field-label">Pension ID</label>
+      <input class="field-input" placeholder="PP-ABC12345" value="PP-RAM12345" style="font-family:'JetBrains Mono',monospace;letter-spacing:0.08em;font-size:15px">
+      <label class="field-label">Password</label>
+      <input class="field-input" type="password" placeholder="Your password" value="••••••••">
+      <button class="primary-btn">Sign In →</button>
+      <div class="login-link">New worker? <a href="#">Create Account →</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- SCREEN 3: Deposit -->
+<div>
+  <p class="screen-label">Deposit</p>
+  <div class="screen">
+    <div class="app-header">
+      <strong style="font-family:Sora,sans-serif;font-size:17px;color:#1e293b">Save Money</strong>
+      <div class="header-actions">
+        <div class="icon-btn">🔔</div>
+        <div class="icon-btn indigo">🛡️</div>
+      </div>
+    </div>
+
+    <div class="page-content">
+      <!-- Balance bar -->
+      <div style="background:linear-gradient(135deg,#eef2ff,#ede9fe);border-radius:22px;padding:16px;display:flex;align-items:center;justify-content:space-between">
+        <div>
+          <div style="font-size:10px;color:#818cf8;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:4px">Your Savings</div>
+          <div style="font-family:Sora,sans-serif;font-size:22px;font-weight:800;color:#312e81">₹12,450</div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:11px;color:#94a3b8;font-weight:600;margin-bottom:2px">Liquid available</div>
+          <div style="font-family:Sora,sans-serif;font-size:17px;font-weight:800;color:#047857">₹2,490</div>
+        </div>
+      </div>
+
+      <!-- Info -->
+      <div class="info-pill">
+        <div class="info-icon">💡</div>
+        <span>Every deposit auto-splits: <strong>80% pension</strong> + <strong>20% liquid</strong></span>
+      </div>
+
+      <!-- Tabs -->
+      <div class="tab-bar">
+        <button class="tab-btn active">📱 Direct Deposit</button>
+        <button class="tab-btn inactive">🤝 Via Agent</button>
+      </div>
+
+      <!-- Amount -->
+      <div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+          <label class="field-label" style="margin:0">Amount</label>
+          <span style="font-size:11px;font-weight:800;color:#4f46e5;background:#eef2ff;padding:4px 10px;border-radius:99px">Suggested ₹180</span>
+        </div>
+        <div class="amount-input-wrap">
+          <span class="amount-prefix">₹</span>
+          <input class="amount-input" type="number" value="200" placeholder="0">
+        </div>
+        <div class="quick-amounts">
+          <div class="quick-pill active">₹180</div>
+          <div class="quick-pill">₹50</div>
+          <div class="quick-pill">₹100</div>
+          <div class="quick-pill">₹200</div>
+          <div class="quick-pill">₹500</div>
+        </div>
+      </div>
+
+      <!-- Split preview -->
+      <div class="split-preview">
+        <div class="split-bar2"><div class="split-bar2-fill"></div></div>
+        <div class="split-cells">
+          <div class="split-cell">
+            <div class="split-cell-label">
+              <div class="split-cell-dot2" style="background:#fbbf24"></div>
+              <span style="color:#d97706">Pension 80%</span>
+            </div>
+            <div class="split-cell-amt" style="color:#92400e">₹160</div>
+            <div class="split-cell-sub">Locked for retirement</div>
+          </div>
+          <div class="split-cell">
+            <div class="split-cell-label">
+              <div class="split-cell-dot2" style="background:#34d399"></div>
+              <span style="color:#059669">Liquid 20%</span>
+            </div>
+            <div class="split-cell-amt" style="color:#065f46">₹40</div>
+            <div class="split-cell-sub">Emergency access</div>
+          </div>
+        </div>
+      </div>
+
+      <button class="primary-btn" style="margin-top:4px">Deposit Now →</button>
+    </div>
+
+    <div class="bottom-nav">
+      <div class="nav-item">
+        <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#94a3b8" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H5a1 1 0 01-1-1V9.5z"/></svg>
+        <span class="nav-label inactive">Home</span>
+      </div>
+      <div class="nav-item active">
+        <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#4f46e5" stroke-width="2"><circle cx="12" cy="12" r="9"/><path stroke-linecap="round" d="M12 7v5l3 3"/></svg>
+        <span class="nav-label active">Save</span>
+        <div class="nav-dot"></div>
+      </div>
+      <div class="nav-item"><svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#94a3b8" stroke-width="2"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg><span class="nav-label inactive">Income</span></div>
+      <div class="nav-item"><svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#94a3b8" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg><span class="nav-label inactive">History</span></div>
+      <div class="nav-item"><svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#94a3b8" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg><span class="nav-label inactive">Profile</span></div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

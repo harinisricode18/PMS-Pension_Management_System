@@ -1,0 +1,39 @@
+/* PMS — Global Styles */
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Nunito:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root { color-scheme: light; }
+
+html, body, #root {
+  min-height: 100vh;
+  background: #f8fafc;
+  color: #1e293b;
+  font-family: 'Nunito', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Reset Vite defaults completely */
+body { display: block; place-items: unset; }
+
+button { all: unset; cursor: pointer; }
+a { text-decoration: none; color: inherit; }
+input, textarea, select { font-family: inherit; }
+
+/* Spinner keyframe */
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Shimmer for skeletons */
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
+}
+
+/* Remove number input spinners */
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button { -webkit-appearance: none; appearance: none; }
+input[type='number'] { -moz-appearance: textfield; appearance: textfield; }
+
+/* Tap highlight */
+* { -webkit-tap-highlight-color: transparent; }
