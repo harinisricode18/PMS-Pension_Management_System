@@ -110,6 +110,25 @@ export default function DepositPage() {
     setToken(res.token_id); setTokenExpiry(res.expires_at);
   };
 
+  const handleSimulateAgent = async () => {
+    if (!token) return;
+    setLoading(true);
+    setError("");
+    const res = await api.agentConfirmCash({
+      agent_id: "demo_agent",
+      token_id: token
+    });
+
+    setLoading(false);
+    if (!res.success){
+      setError(res.error || "Agent confirmation failed");
+      return;
+    }
+    
+    await refreshUser();
+    setShowSuccess(true);
+  };
+
   const quickAmounts = [50,100,200,500];
   if (target&&!quickAmounts.includes(Math.ceil(target))) quickAmounts.unshift(Math.ceil(target));
 
@@ -197,20 +216,35 @@ export default function DepositPage() {
           )}
 
           {error && <div style={{ background:C.red50,border:`1px solid ${C.red100}`,borderRadius:12,padding:"12px 16px",fontSize:13,color:C.red500,display:"flex",gap:8 }}>⚠️ {error}</div>}
-
+          
+           
+          
+          
           {mode==="direct" ? (
             <button onClick={handleDeposit} disabled={loading||!amount||parseFloat(amount)<=0} style={{ ...btnPrimary,opacity:loading||!amount?0.6:1,cursor:loading?"wait":"pointer" }}>
               {loading?<><span style={{ width:18,height:18,border:"2px solid rgba(255,255,255,0.3)",borderTopColor:"white",borderRadius:"50%",animation:"spin 0.8s linear infinite",display:"inline-block" }}/>Processing…</>:<>Deposit Now →</>}
             </button>
           ) : token ? (
-            <button onClick={()=>{ setToken(null); setTokenExpiry(null); }} style={{ ...btnPrimary,background:C.slate100,color:C.slate600,boxShadow:"none" }}>Generate New Code</button>
-          ) : (
-            <button onClick={handleToken} disabled={loading||!amount||parseFloat(amount)<=0} style={{ ...btnPrimary,background:"linear-gradient(135deg,#059669,#10b981)",boxShadow:"0 8px 24px -4px rgba(5,150,105,0.4)",opacity:loading||!amount?0.6:1 }}>
-              {loading?<><span style={{ width:18,height:18,border:"2px solid rgba(255,255,255,0.3)",borderTopColor:"white",borderRadius:"50%",animation:"spin 0.8s linear infinite",display:"inline-block" }}/>Generating…</>:"Generate Agent Code 🤝"}
-            </button>
-          )}
+            <div style={{ display:"flex",flexDirection:"column",gap:10 }}>
+              <button
+              onClick={handleSimulateAgent}
+              style={{
+                ...btnPrimary,
+                background:"linear-gradient(135deg,#059669,#10b981)"
+              }}
+            >
+             Simulate Agent Confirmation ✓
+            </button> 
+            <button onClick={()=>{ setToken(null); setTokenExpiry(null); }} style={{...btnPrimary, background:C.slate100, color:C.slate600, boxShadow:"none"}}
+                >Generate New Code </button> </div> 
+              ) : ( <button onClick={handleToken} disabled={loading||!amount||parseFloat(amount)<=0} style={{...btnPrimary, background:"linear-gradient(135deg,#059669,#10b981)", boxShadow:"0 8px 24px -4px rgba(5,150,105,0.4)", opacity:loading||!amount?0.6:1 }}
+              > {loading ? ( <> <span style={{ width:18,height:18, border:"2px solid rgba(255,255,255,0.3)", borderTopColor:"white", borderRadius:"50%", animation:"spin 0.8s linear infinite", display:"inline-block" }}/> 
+              Generating… </> ) : 
+              ( "Generate Agent Code 🤝" )} </button>
+            
+        )}
         </div>
-
+            
         {/* Right: split preview */}
         <div style={{ display:"flex",flexDirection:"column",gap:18 }}>
           <SplitPreview amount={amount} />

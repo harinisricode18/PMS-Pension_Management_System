@@ -103,16 +103,7 @@ class WithdrawalGovernanceService:
 
     def request_withdrawal(self, pension_id: str, amount: float) -> dict:
         """
-        Initiate a withdrawal request.
-
-        Instant approval shape:
-        {
-            "approved":            True,
-            "dual_key_required":   False,
-            "liquid_vault_after":  float,
-            "pension_vault_after": float,
-            "transaction_id":      str,
-        }
+        Initiate a withdrawal request requiring nominee approval (Dual-Key).       
 
         Dual-Key required shape:
         {
@@ -135,15 +126,16 @@ class WithdrawalGovernanceService:
             raise RuntimeError(f"Worker '{pension_id}' not found")
 
         liquid  = user["liquid_vault"]
-        pension = user["pension_vault"]
-        total   = round(liquid + pension, 2)
+        #pension = user["pension_vault"]
+        #total   = round(liquid + pension, 2)
 
-        if amount > liquid:
+        '''
+        if amount <= liquid:
             raise ValueError(
                 f"Withdrawal exceeds liquid savings. Requested ₹{amount:.2f},"
                 f"Available ₹{liquid:.2f}"                
             )
-
+      
         # ── Instant path ───────────────────────────────────────────────────
         if amount <= liquid:
             result = execute_withdrawal(
@@ -173,6 +165,12 @@ class WithdrawalGovernanceService:
                 "pension_vault_after": result["pension_vault_after"],
                 "transaction_id":      result["transaction_id"],
             }
+        '''
+                
+        if amount > liquid:
+            raise ValueError(
+                f"Withdrawal exceeds liquid vault. Available ₹{liquid:.2f}"
+                )
 
         # ── Dual-Key path ──────────────────────────────────────────────────
         nominee_phone = user.get("nominee_phone", "")

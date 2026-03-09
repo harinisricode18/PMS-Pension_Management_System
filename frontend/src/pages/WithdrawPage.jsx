@@ -240,8 +240,8 @@ export default function WithdrawPage() {
         <div style={{ ...card,padding:"20px 24px" }}>
           <div style={{ fontSize:13,fontWeight:700,color:C.slate700,marginBottom:12 }}>📋 Withdrawal Rules</div>
           {[
-            ["⚡","Instant","Small withdrawals (below threshold) are instant"],
-            ["🔐","Dual-Key","Large withdrawals need your nominee's OTP approval"],
+            ["🔐","Nominee Approval","Every withdrawal requires your nominee's OTP approval"],
+            ["🛡️","Social Protection","Withdrawals are approved through a dual-key safeguard"],           
             ["💧","Liquid Only","Only liquid vault (20% of savings) is withdrawable"],
             ["🛡️","Protected","Your pension vault is safe until retirement"],
           ].map(([emoji,title,desc])=>(
