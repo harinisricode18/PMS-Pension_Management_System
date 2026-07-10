@@ -20,7 +20,7 @@ Over 85% of India's workforce belongs to the informal sector, where workers:
 
 Existing pension systems are designed for salaried individuals, making them inaccessible for millions of daily wage earners.
 
-Zenith addresses this challenge by providing an adaptive micro-pension ecosystem that converts volatile income into sustainable retirement savings.
+PMS addresses this challenge by providing an adaptive micro-pension ecosystem that converts volatile income into sustainable retirement savings.
 
 ---
 
@@ -252,8 +252,8 @@ This adaptive, AI-driven approach makes retirement planning practical for millio
 #Developed as a part of Zenith Hackathon
 
 - **Harinisri Ramesh** — Team Lead & Backend Developer
-- **Harini V** — Backend & Machine Learning Engineer
-- **Malathi G** — Frontend Developer
+- **Malathi G** — Backend & Machine Learning Engineer
+- **Harini V** — Frontend Developer
 
 ---
 
