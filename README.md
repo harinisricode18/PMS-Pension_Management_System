@@ -239,7 +239,7 @@ Instead of asking:
 
 > "Can you save ₹500 every month?"
 
-Zenith asks:
+PMS asks:
 
 > "Given what you earned today, how much can you safely save without affecting tomorrow?"
 
