@@ -2,7 +2,7 @@
 
 > **Financial Intelligence for the Informal Workforce**
 
-PMS is an AI-driven financial management system designed to help informal sector workers build long-term financial security despite irregular daily income. Unlike traditional pension schemes that require fixed monthly contributions, Zenith adapts to fluctuating earnings and recommends personalized savings targets using financial signal processing.
+PMS is an AI-driven financial management system designed to help informal sector workers build long-term financial security despite irregular daily income. Unlike traditional pension schemes that require fixed monthly contributions, PMS adapts to fluctuating earnings and recommends personalized savings targets using financial signal processing.
 
 The platform bridges the gap between daily survival and retirement planning through intelligent savings recommendations, emergency fund allocation, retirement forecasting, and behavioral financial guidance.
 
